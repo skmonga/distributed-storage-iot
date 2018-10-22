@@ -1,5 +1,8 @@
 import sys
 sys.path.append('./gen-py')
+
+arguments = sys.argv[1:]
+portNum = int(arguments[0])
  
 from wantreetraverser.WANTreeTraverserService import Client
  
@@ -15,7 +18,7 @@ class WAN_TreeTraverserClient(object):
 
   def send_request(self, filename, attributes, data):  
     try:
-      transport = TSocket.TSocket('localhost', 30000)
+      transport = TSocket.TSocket(self.ip, self.port)
       #use buffered sockets, raw sockets slow
       transport = TTransport.TBufferedTransport(transport)
       protocol = TBinaryProtocol.TBinaryProtocol(transport)
@@ -28,7 +31,7 @@ class WAN_TreeTraverserClient(object):
       print(tx.message)
 
 if __name__ == '__main__':
-  client = WAN_TreeTraverserClient('localhost', 30000)
+  client = WAN_TreeTraverserClient('localhost', portNum)
   client.send_request('a.txt', {}, bytearray(b'\x00\x0F'))
 
 

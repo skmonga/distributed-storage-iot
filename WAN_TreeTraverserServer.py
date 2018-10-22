@@ -1,6 +1,9 @@
 import sys
 sys.path.append('./gen-py')
 
+arguments = sys.argv[1:]
+portNum = int(arguments[0])
+
 import time
 
 from wandefinitions.ttypes import (MessageType, ResponseCode, Response)
@@ -44,7 +47,10 @@ class TreeTraverserHandler(Iface):
 
   def getChildren(self):
     #here return the actual children of the current node
-    return [("localhost", 30000)]
+    if portNum == 30000:
+      return [("localhost", 30001)]
+    else:
+      return []
 
   def visitChildren(self, filename, attributes, data):
     children = self.getChildren()
@@ -72,7 +78,7 @@ class TreeTraverserHandler(Iface):
 
 handler = TreeTraverserHandler()
 processor = Processor(handler)
-transport = TSocket.TServerSocket(host='localhost', port=30000)
+transport = TSocket.TServerSocket(host='localhost', port=portNum)
 tfactory = TTransport.TBufferedTransportFactory()
 pfactory = TBinaryProtocol.TBinaryProtocolFactory()
 
